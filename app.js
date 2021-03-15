@@ -39,8 +39,20 @@ function addTodo(event) {
 
 function deleteCheck(event) {
   const item = event.target;
+
+  //delete todo
   if (item.classList[0] === 'trash-btn') {
     const todo = item.parentElement;
-    todo.remove();
+    todo.classList.add('fall');
+    //event listener that wait until css animation/transition ended.
+    todo.addEventListener('transitionend', function () {
+      todo.remove();
+    });
+  }
+
+  // check mark todo
+  if (item.classList[0] === 'complete-btn') {
+    const todo = item.parentElement;
+    todo.classList.toggle('completed');
   }
 }
