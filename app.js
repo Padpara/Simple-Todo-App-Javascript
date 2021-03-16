@@ -52,6 +52,7 @@ function deleteCheck(event) {
     todo.classList.add('fall');
 
     removeLocalTodos(todo);
+
     //event listener that wait until css animation/transition ended.
     todo.addEventListener('transitionend', function () {
       todo.remove();
@@ -152,7 +153,20 @@ function removeLocalTodos(todo) {
   }
   // console.log(todo.children[0].innerText);
   const todoIndex = todo.children[0].innerText;
-  todos.splice(todos.indexOf(todoIndex), 1);
+
+  function returnIndex(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr[i].length; j++) {
+        if (arr[i][j] === todoIndex) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+  const index = returnIndex(todos);
+  console.log(index);
+  todos.splice(index, 1);
   localStorage.setItem('todos', JSON.stringify(todos));
 }
 
@@ -179,6 +193,7 @@ function checkLocalTodos(todo) {
   }
 
   const index = returnIndex(todos);
+  console.log(index);
   // todos[index][1] = 'completed';
   if (todos[index][1] === 'uncompleted') {
     todos[index][1] = 'completed';
