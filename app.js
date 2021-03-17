@@ -23,8 +23,11 @@ function addTodo(event) {
   newTodo.innerText = todoInput.value;
   newTodo.classList.add('todo-item');
   todoDiv.appendChild(newTodo);
-
-  saveLocalTodos([todoInput.value, 'uncompleted']);
+  const todoToLocal = {
+    content: todoInput.value,
+    status: 'uncompleted',
+  };
+  saveLocalTodos(todoToLocal);
 
   //create button check
   const completedButton = document.createElement('button');
@@ -121,7 +124,7 @@ function getTodos() {
     todoDiv.classList.add('todo');
     //create LI
     const newTodo = document.createElement('li');
-    newTodo.innerText = todo[0];
+    newTodo.innerText = todo.content;
     newTodo.classList.add('todo-item');
 
     todoDiv.appendChild(newTodo);
@@ -136,7 +139,7 @@ function getTodos() {
     trashButton.innerHTML = `<i class="fas fa-trash"></i>`;
     trashButton.classList.add('trash-btn');
     todoDiv.appendChild(trashButton);
-    if (todo[1] === 'completed') {
+    if (todo.status === 'completed') {
       todoDiv.classList.add('completed');
     }
     //append todoDiv to todoList (UL)
@@ -154,17 +157,7 @@ function removeLocalTodos(todo) {
   // console.log(todo.children[0].innerText);
   const todoIndex = todo.children[0].innerText;
 
-  function returnIndex(arr) {
-    for (let i = 0; i < arr.length; i++) {
-      for (let j = 0; j < arr[i].length; j++) {
-        if (arr[i][j] === todoIndex) {
-          return i;
-        }
-      }
-    }
-    return -1;
-  }
-  const index = returnIndex(todos);
+  const index = returnIndex(todos, todoIndex);
   console.log(index);
   todos.splice(index, 1);
   localStorage.setItem('todos', JSON.stringify(todos));
@@ -181,25 +174,23 @@ function checkLocalTodos(todo) {
   console.log(todos);
   console.log(todoIndex);
 
-  function returnIndex(arr) {
-    for (let i = 0; i < arr.length; i++) {
-      for (let j = 0; j < arr[i].length; j++) {
-        if (arr[i][j] === todoIndex) {
-          return i;
-        }
-      }
-    }
-    return -1;
-  }
-
-  const index = returnIndex(todos);
+  const index = returnIndex(todos, todoIndex);
   console.log(index);
   // todos[index][1] = 'completed';
-  if (todos[index][1] === 'uncompleted') {
-    todos[index][1] = 'completed';
+  if (todos[index].status === 'uncompleted') {
+    todos[index].status = 'completed';
   } else {
-    todos[index][1] = 'uncompleted';
+    todos[index].status = 'uncompleted';
   }
 
   localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+function returnIndex(arr, content) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].content === content) {
+      return i;
+    }
+  }
+  return -1;
 }
